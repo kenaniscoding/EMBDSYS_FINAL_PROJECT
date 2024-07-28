@@ -1,4 +1,5 @@
 # EMBDSYS_FINAL_PROJECT
+use the version 2 proteus file
 ## TODO LIST
 - connect switches to work with the LCD together with the ir sensor, dc motor, and ultrasonic sensor
 ## Schematic Diagram
