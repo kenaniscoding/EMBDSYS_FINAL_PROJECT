@@ -1,4 +1,4 @@
-# EMBDSYS_FINAL_PROJECT
+# Development of Cow Milking Control System with Milk Tank Level Indicator
 use the version 2 proteus file
 ## TODO LIST
 - LCD display the level of the milk through the Ultrasonic sensor
