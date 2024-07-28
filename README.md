@@ -1,7 +1,5 @@
 # EMBDSYS_FINAL_PROJECT
 ## TODO LIST
-- add switches (depending how many port remain)
-- add 4 ir sensors
 - connect switches to work with the LCD together with the ir sensor, dc motor, and ultrasonic sensor
 ## Schematic Diagram
 ![image](https://github.com/user-attachments/assets/2e8c4cbb-4da5-4ed9-bf49-a6cfd323f088)
