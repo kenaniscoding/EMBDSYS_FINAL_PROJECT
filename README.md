@@ -1,7 +1,9 @@
 # EMBDSYS_FINAL_PROJECT
 use the version 2 proteus file
 ## TODO LIST
-- connect switches to work with the LCD together with the ir sensor, dc motor, and ultrasonic sensor
+- LCD display the level of the milk through the Ultrasonic sensor
+- Integrate functions with the buttons to the LCD
+- Make the DC motors only work when all the IR sensors are HIGH
 ## Schematic Diagram
 ![image](https://github.com/user-attachments/assets/2e8c4cbb-4da5-4ed9-bf49-a6cfd323f088)
 ## Current Schematic 
