@@ -17,19 +17,20 @@ upload the hex file for the ultrasonic sensor and arduino code
 
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
-#define Sensor A0
 const int trigger = 3;
 const int echo = 2;
 
 void setup(){
   lcd.init();                      // initialize the lcd 
-  // Print a message to the LCD.
   lcd.begin(20,4,LCD_5x8DOTS);
   lcd.backlight();
   for (int i=3; i<=7; i++){
-  pinMode(i, OUTPUT); // set the dc motors as output
+  pinMode(i, OUTPUT); // set the dc motors and trig as output
   }
-  pinMode(echo,INPUT); 
+  pinMode(echo,INPUT); // 
+  for (int i=8; i<=13; i++){
+    pinMode(echo,INPUT); // set the ir sensors and buttons as input
+  }
   Serial.begin(9600);
   
 }
@@ -38,9 +39,21 @@ void loop() {
   // establish variables for duration of the ping, 
   // and the distance result in inches and centimeters:
   long duration, inches, cm;
-
+  int ir1 = digitalRead(8);
+  int ir2 = digitalRead(9);
+  int ir3 = digitalRead(10);
+  int ir4 = digitalRead(11);
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
+  Serial.print("ir1=");
+  Serial.print(ir1);
+  Serial.print(" ir2=");
+  Serial.print(ir2);
+  Serial.print(" ir3=");
+  Serial.print(ir3);
+  Serial.print(" ir4=");
+  Serial.print(ir4);
+  Serial.println();
   digitalWrite(trigger, LOW);
   //delayMicroseconds(2);
   delay(2);
@@ -83,11 +96,11 @@ void loop() {
   for (int i=4; i<=7; i++){
     digitalWrite(i,LOW);
   }
-  delay(500);
+  delay(100);
   for (int i=4; i<=7; i++){
     digitalWrite(i,HIGH);
   }
-  delay(500);
+  delay(100);
   lcd.clear();
   //delay(20);
 }
@@ -108,5 +121,6 @@ long microsecondsToCentimeters(long microseconds)
   // object we take half of the distance travelled.
   return microseconds / 29 / 2;
 }
+
 
 ```
