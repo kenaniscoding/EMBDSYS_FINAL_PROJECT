@@ -1,4 +1,7 @@
 # EMBDSYS_FINAL_PROJECT
+## Schematic Diagram
+![image](https://github.com/user-attachments/assets/2e8c4cbb-4da5-4ed9-bf49-a6cfd323f088)
+
 ## Arduino Code
 ```
 #include <Wire.h> 
