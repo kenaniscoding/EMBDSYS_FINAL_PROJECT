@@ -6,7 +6,8 @@
 ## Schematic Diagram
 ![image](https://github.com/user-attachments/assets/2e8c4cbb-4da5-4ed9-bf49-a6cfd323f088)
 ## Current Schematic 
-![image](https://github.com/user-attachments/assets/440ead0e-ee3d-4a85-8ff5-d572332700f7)
+![image](https://github.com/user-attachments/assets/06d052f2-3cf7-48c2-9161-e728ff0e80bb)
+
 ## Notes
 upload the hex file for the ultrasonic sensor and arduino code
 ## Arduino Code
