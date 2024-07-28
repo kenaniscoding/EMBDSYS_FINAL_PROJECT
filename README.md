@@ -4,8 +4,6 @@ use the version 2 proteus file
 - LCD display the level of the milk through the Ultrasonic sensor
 - Integrate functions with the buttons to the LCD
 - Make the DC motors only work when all the IR sensors are HIGH
-## Schematic Diagram
-![image](https://github.com/user-attachments/assets/2e8c4cbb-4da5-4ed9-bf49-a6cfd323f088)
 ## Current Schematic 
 ![image](https://github.com/user-attachments/assets/06d052f2-3cf7-48c2-9161-e728ff0e80bb)
 
