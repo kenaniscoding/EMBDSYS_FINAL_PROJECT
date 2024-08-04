@@ -5,7 +5,7 @@ use the version 2 proteus file
 - Integrate functions with the buttons to the LCD (start and stopping of all DC motors)
 - Make the DC motors only work when all the IR sensors are HIGH
 ## Current Schematic 
-![image](https://github.com/user-attachments/assets/06d052f2-3cf7-48c2-9161-e728ff0e80bb)
+![image](https://github.com/user-attachments/assets/469d286f-9a25-46c5-a477-f46061e335bf)
 
 ## Notes
 upload the hex file for the ultrasonic sensor and arduino code
