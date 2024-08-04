@@ -1,9 +1,10 @@
 # Development of Cow Milking Control System with Milk Tank Level Indicator
 use the version 2 proteus file
 ## TODO LIST
-- LCD display the level of the milk through the Ultrasonic sensor
-- Integrate functions with the buttons to the LCD (start and stopping of all DC motors)
-- Make the DC motors only work when all the IR sensors are HIGH
+- ~LCD display the level of the milk through the Ultrasonic sensor~
+- ~Integrate functions with the buttons to the LCD (start and stopping of all DC motors)~
+- ~Make the DC motors only work when all the IR sensors are HIGH~
+- Add different DC motor patterns using the third button
 ## Current Schematic 
 ![image](https://github.com/user-attachments/assets/469d286f-9a25-46c5-a477-f46061e335bf)
 
