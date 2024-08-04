@@ -12,7 +12,7 @@ use the version 2 proteus file
 
 ## Notes
 upload the hex file for the ultrasonic sensor and arduino code
-## Arduino Code with Double Clikc Pattern Button
+## Arduino Code with Double Click Pattern Button
 ```
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
