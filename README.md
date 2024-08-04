@@ -6,7 +6,8 @@ use the version 2 proteus file
 - ~Make the DC motors only work when all the IR sensors are HIGH~
 - Add different DC motor patterns using the third button
 ## Current Schematic 
-![image](https://github.com/user-attachments/assets/8d307084-1acc-41a3-8bfc-67e6fddc19d0)
+![image](https://github.com/user-attachments/assets/2b006f4c-dbee-456c-b9c6-38ce355a1de7)
+
 
 
 ## Notes
@@ -16,29 +17,32 @@ upload the hex file for the ultrasonic sensor and arduino code
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x27, 20, 4);  // set the LCD address to 0x27 for a 20 chars and 4 line display
 
 const int trigger = 3;
 const int echo = 2;
 const int startButton = 13;
 const int stopButton = 12;
+const int tempSensorPin = A0;
 
 bool motorsRunning = false; // State of the motors
 bool temp = true;
-bool initalRun = true;
+bool initialRun = true;
+
 // Variables to store previous states
 int prevPercentage = -1;
 bool prevMotorsRunning = false;
 bool prevIrError = false;
+int prevTemperature = -1;
 
 void setup() {
   lcd.init();                      // initialize the lcd 
-  lcd.begin(20, 4, LCD_5x8DOTS);
   lcd.backlight();
   for (int i = 3; i <= 7; i++) {
     pinMode(i, OUTPUT); // set the dc motors and trig as output
   }
   pinMode(echo, INPUT); // set the echo as input
+  pinMode(tempSensorPin, INPUT);
   pinMode(startButton, INPUT_PULLUP); // set the start button as input with pull-up resistor
   pinMode(stopButton, INPUT_PULLUP);  // set the stop button as input with pull-up resistor
   Serial.begin(9600);
@@ -48,6 +52,10 @@ void loop() {
   // Read the state of the start and stop buttons
   int startButtonState = digitalRead(startButton);
   int stopButtonState = digitalRead(stopButton);
+
+  int temperatureSensorValue = analogRead(tempSensorPin);
+  int temperature = (temperatureSensorValue * 4.88)/10;	/* Convert adc value to equivalent voltage */ 
+
   long duration, cm;
   int ir1 = digitalRead(8);
   int ir2 = digitalRead(9);
@@ -62,13 +70,9 @@ void loop() {
   duration = pulseIn(echo, HIGH);
   cm = microsecondsToCentimeters(duration);
 
-  //Serial.print(cm);
-  //Serial.print(" cm");
-  //Serial.println();
-
   // Calculate the percentage of the tank filled
   int percentage = map(cm, 1000, 100, 0, 100);
-  
+
   // Update the tank percentage on the LCD if it has changed
   if (percentage != prevPercentage) {
     lcd.setCursor(0, 0);
@@ -78,10 +82,10 @@ void loop() {
     prevPercentage = percentage; // Update the previous percentage
   }
 
-  if (initalRun){
+  if (initialRun) {
     lcd.setCursor(0, 2);
     lcd.print("Not Milking Cow  ");
-    initalRun=false;
+    initialRun = false;
   }
 
   // Check if the start button is pressed (active low)
@@ -129,12 +133,21 @@ void loop() {
     prevMotorsRunning = motorsRunning; // Update the previous motors running state
   }
 
+  // Update the temperature on the LCD if it has changed
+  if (temperature != prevTemperature) {
+    lcd.setCursor(0, 3);
+    lcd.print("Temp: ");
+    lcd.print(temperature);
+    lcd.print("C    ");
+    prevTemperature = temperature; // Update the previous temperature
+  }
+
   // Control the motors based on the state
   for (int i = 4; i <= 7; i++) {
     digitalWrite(i, motorsRunning ? HIGH : LOW);
   }
 
-  //delay(100);
+  delay(100);
 }
 
 long microsecondsToCentimeters(long microseconds) {
@@ -143,5 +156,6 @@ long microsecondsToCentimeters(long microseconds) {
   // object we take half of the distance travelled.
   return microseconds / 29 / 2;
 }
+
 
 ```
