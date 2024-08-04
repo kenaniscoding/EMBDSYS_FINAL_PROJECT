@@ -23,11 +23,13 @@ const int trigger = 3;
 const int echo = 2;
 const int startButton = 13;
 const int stopButton = 12;
+const int modeButton = 0;
 const int tempSensorPin = A0;
 
 bool motorsRunning = false; // State of the motors
 bool temp = true;
 bool initialRun = true;
+bool modePattern = false; // State of the mode pattern
 
 // Variables to store previous states
 int prevPercentage = -1;
@@ -45,6 +47,7 @@ void setup() {
   pinMode(tempSensorPin, INPUT);
   pinMode(startButton, INPUT_PULLUP); // set the start button as input with pull-up resistor
   pinMode(stopButton, INPUT_PULLUP);  // set the stop button as input with pull-up resistor
+  pinMode(modeButton, INPUT_PULLUP);  // set the mode button as input with pull-up resistor
   Serial.begin(9600);
 }
 
@@ -52,9 +55,10 @@ void loop() {
   // Read the state of the start and stop buttons
   int startButtonState = digitalRead(startButton);
   int stopButtonState = digitalRead(stopButton);
+  int modeButtonState = digitalRead(modeButton);
 
   int temperatureSensorValue = analogRead(tempSensorPin);
-  int temperature = (temperatureSensorValue * 4.88)/10;	/* Convert adc value to equivalent voltage */ 
+  int temperature = (temperatureSensorValue * 4.88)/10; // Convert adc value to equivalent voltage 
 
   long duration, cm;
   int ir1 = digitalRead(8);
@@ -82,6 +86,15 @@ void loop() {
     prevPercentage = percentage; // Update the previous percentage
   }
 
+  // Update the temperature on the LCD if it has changed
+  if (temperature != prevTemperature) {
+    lcd.setCursor(0, 1);
+    lcd.print("Temp: ");
+    lcd.print(temperature);
+    lcd.print("C    ");
+    prevTemperature = temperature; // Update the previous temperature
+  }
+
   if (initialRun) {
     lcd.setCursor(0, 2);
     lcd.print("Not Milking Cow  ");
@@ -91,15 +104,15 @@ void loop() {
   // Check if the start button is pressed (active low)
   if (startButtonState == LOW) {
     if (percentage >= 100) {
-      lcd.setCursor(0, 1);
+      lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
       lcd.print("Empty Tank to milk");
     } else {
       if (ir1 == HIGH && ir2 == HIGH && ir3 == HIGH && ir4 == HIGH) {
         motorsRunning = true;
         prevIrError = false;
       } else {
-        lcd.setCursor(0, 1);
-        lcd.print("IR error");
+        lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
+        lcd.print("IR error         ");
         prevIrError = true;
       }
     }
@@ -116,9 +129,12 @@ void loop() {
   if (motorsRunning) {
     if ((ir1 == LOW) || (ir2 == LOW) || (ir3 == LOW) || (ir4 == LOW)) {
       motorsRunning = false;
-      lcd.setCursor(0, 1);
-      lcd.print("IR disconnected");
+      lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
+      lcd.print("IR disconnected  ");
       prevIrError = true;
+    } else {
+      lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
+      lcd.print("IR connected     ");
     }
   }
 
@@ -133,20 +149,44 @@ void loop() {
     prevMotorsRunning = motorsRunning; // Update the previous motors running state
   }
 
-  // Update the temperature on the LCD if it has changed
-  if (temperature != prevTemperature) {
-    lcd.setCursor(0, 3);
-    lcd.print("Temp: ");
-    lcd.print(temperature);
-    lcd.print("C    ");
-    prevTemperature = temperature; // Update the previous temperature
-  }
-
   // Control the motors based on the state
-  for (int i = 4; i <= 7; i++) {
-    digitalWrite(i, motorsRunning ? HIGH : LOW);
+  if (motorsRunning && modeButtonState == LOW) {
+    modePattern = true;
+  } else {
+    modePattern = false;
   }
 
+  if (motorsRunning && modePattern) {
+    christmasLightPattern();
+  } else {
+    for (int i = 4; i <= 7; i++) {
+      digitalWrite(i, motorsRunning ? HIGH : LOW);
+    }
+  }
+
+  delay(100);
+}
+
+void christmasLightPattern() {
+  digitalWrite(4, HIGH);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
+  digitalWrite(7, LOW);
+  delay(100);
+  digitalWrite(4, LOW);
+  digitalWrite(5, HIGH);
+  digitalWrite(6, LOW);
+  digitalWrite(7, LOW);
+  delay(100);
+  digitalWrite(4, LOW);
+  digitalWrite(5, LOW);
+  digitalWrite(6, HIGH);
+  digitalWrite(7, LOW);
+  delay(100);
+  digitalWrite(4, LOW);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
+  digitalWrite(7, HIGH);
   delay(100);
 }
 
