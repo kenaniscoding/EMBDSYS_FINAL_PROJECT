@@ -11,7 +11,8 @@ use the version 2 proteus file
 
 
 ## Notes
-upload the hex file for the ultrasonic sensor and arduino code
+- upload the hex file for the ultrasonic sensor and arduino code
+- two Arduino Code below one for double click and another for single click patterns
 ## Arduino Code with Double Click Pattern Button
 ```
 #include <Wire.h> 
