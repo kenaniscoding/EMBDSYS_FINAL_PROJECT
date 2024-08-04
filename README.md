@@ -6,7 +6,8 @@ use the version 2 proteus file
 - ~Make the DC motors only work when all the IR sensors are HIGH~
 - Add different DC motor patterns using the third button
 ## Current Schematic 
-![image](https://github.com/user-attachments/assets/469d286f-9a25-46c5-a477-f46061e335bf)
+![image](https://github.com/user-attachments/assets/8d307084-1acc-41a3-8bfc-67e6fddc19d0)
+
 
 ## Notes
 upload the hex file for the ultrasonic sensor and arduino code
