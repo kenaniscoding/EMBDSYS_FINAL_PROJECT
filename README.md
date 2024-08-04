@@ -22,6 +22,12 @@ const int startButton = 13;
 const int stopButton = 12;
 
 bool motorsRunning = false; // State of the motors
+bool temp = true;
+bool initalRun = true;
+// Variables to store previous states
+int prevPercentage = -1;
+bool prevMotorsRunning = false;
+bool prevIrError = false;
 
 void setup() {
   lcd.init();                      // initialize the lcd 
@@ -54,18 +60,27 @@ void loop() {
   duration = pulseIn(echo, HIGH);
   cm = microsecondsToCentimeters(duration);
 
-  Serial.print(cm);
-  Serial.print(" cm");
-  Serial.println();
+  //Serial.print(cm);
+  //Serial.print(" cm");
+  //Serial.println();
 
   // Calculate the percentage of the tank filled
   int percentage = map(cm, 1000, 100, 0, 100);
+  
+  // Update the tank percentage on the LCD if it has changed
+  if (percentage != prevPercentage) {
+    lcd.setCursor(0, 0);
+    lcd.print("Tank: ");
+    lcd.print(percentage);
+    lcd.print("% FULL ");
+    prevPercentage = percentage; // Update the previous percentage
+  }
 
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Tank: ");
-  lcd.print(percentage);
-  lcd.print("% FULL");
+  if (initalRun){
+    lcd.setCursor(0, 2);
+    lcd.print("Not Milking Cow  ");
+    initalRun=false;
+  }
 
   // Check if the start button is pressed (active low)
   if (startButtonState == LOW) {
@@ -75,40 +90,49 @@ void loop() {
     } else {
       if (ir1 == HIGH && ir2 == HIGH && ir3 == HIGH && ir4 == HIGH) {
         motorsRunning = true;
-        delay(200); // Debounce delay
+        prevIrError = false;
       } else {
         lcd.setCursor(0, 1);
-        lcd.print("IR sensor error");
+        lcd.print("IR error");
+        prevIrError = true;
       }
     }
+    delay(100); // Debounce delay
   }
 
   // Check if the stop button is pressed (active low)
   if (stopButtonState == LOW) {
     motorsRunning = false;
-    delay(200); // Debounce delay
+    delay(100); // Debounce delay
   }
 
   // If any IR sensor detects low, stop the motors
-  if ((ir1 == LOW) || (ir2 == LOW) || (ir3 == LOW) || (ir4 == LOW)) {
-    motorsRunning = false;
-    lcd.setCursor(0, 1);
-    lcd.print("IR sensor error");
-    lcd.setCursor(0, 2);
-    lcd.print("Stopping the Milking");
+  if (motorsRunning) {
+    if ((ir1 == LOW) || (ir2 == LOW) || (ir3 == LOW) || (ir4 == LOW)) {
+      motorsRunning = false;
+      lcd.setCursor(0, 1);
+      lcd.print("IR disconnected");
+      prevIrError = true;
+    }
   }
 
-  if (motorsRunning){
-    lcd.setCursor(0, 1);
-    lcd.print("Milking Cows");
+  // Update the milking status on the LCD if it has changed
+  if (motorsRunning != prevMotorsRunning) {
+    lcd.setCursor(0, 2);
+    if (motorsRunning) {
+      lcd.print("Milking Cow      ");
+    } else {
+      lcd.print("Not Milking Cow  ");
+    }
+    prevMotorsRunning = motorsRunning; // Update the previous motors running state
   }
-  
+
   // Control the motors based on the state
   for (int i = 4; i <= 7; i++) {
     digitalWrite(i, motorsRunning ? HIGH : LOW);
   }
 
-  delay(100);
+  //delay(100);
 }
 
 long microsecondsToCentimeters(long microseconds) {
@@ -117,6 +141,7 @@ long microsecondsToCentimeters(long microseconds) {
   // object we take half of the distance travelled.
   return microseconds / 29 / 2;
 }
+
 
 
 
