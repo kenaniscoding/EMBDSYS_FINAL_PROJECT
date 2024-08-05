@@ -149,11 +149,18 @@ void loop() {
       motorsRunning = false;
       modePattern = false; // Stop the pattern when any IR sensor detects low
       lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
-      lcd.print("IR disconnected  ");
+      lcd.print("IR disconnected    ");
       prevIrError = true;
-    } else {
+    } else if (percentage >= 100){
+      motorsRunning = false;
+      modePattern = false; // Stop the pattern when any tank full
       lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
-      lcd.print("IR connected     ");
+      lcd.print("Milk Tank Full     ");
+      prevIrError = true;
+    }
+    else {
+      lcd.setCursor(0, 3); // Moved from 0, 1 to 0, 4
+      lcd.print("IR connected       ");
     }
   }
 
